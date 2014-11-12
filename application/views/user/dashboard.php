@@ -8,7 +8,7 @@
   echo form_open('user/search', array('class' => 'form-search'));
   ?>
   <div class="alert">
-    <p>Please <?php echo anchor('main/info', 'read this', array('target' => '_blank')) ?> before you start using the application.</p>
+    <p>Please <?php echo anchor('user/info', 'read this', array('target' => '_blank')) ?> before you start using the application.</p>
   </div>
   <div class="input-append">
     <?php

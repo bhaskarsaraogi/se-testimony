@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="description" content="Bits Melange, testimonial server for bitsians">
-  <meta name="keywords" content="bits-melange, bits, melange, testimonial server">
+  <meta name="description" content="testimonial server">
+  <meta name="keywords" content="testimonial server">
   <title><?php echo $page_title; ?> &mdash; <?php echo $this->session->userdata('site_name'); ?></title>
 
   <link rel="icon" type="favicon" href="<?php echo base_url(); ?>public/img/favicon.ico"/>
@@ -24,7 +24,7 @@
   <div class="container">
     <header class="row" role="banner">
       <div class="span4">
-        <h1><a href="<?php echo site_url(); ?>">Melange</a></h1>
+        <h1><a href="<?php echo site_url(); ?>">SE-Testimony</a></h1>
       </div>
       <div class="span8">
         <nav class="navbar" role="navigation">

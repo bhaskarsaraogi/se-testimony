@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url'] = 'http://localhost/melange/';
+$config['base_url'] = 'http://localhost/se-testimony/';
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +43,7 @@ $config['index_page'] = 'index.php';
 | 'REQUEST_URI'		Uses the REQUEST_URI
 | 'ORIG_PATH_INFO'	Uses the ORIG_PATH_INFO
 |
-*/ 
+*/
 $config['uri_protocol']	= 'AUTO';
 
 /*
@@ -247,7 +247,7 @@ $config['encryption_key'] = 'v7u1o1EDT4PaoRc58fBtB0kvarG72adC';
 $config['sess_cookie_name']		= 'ci_session';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= FALSE;
-$config['sess_encrypt_cookie']	= FALSE;
+$config['sess_encrypt_cookie']	= TRUE;
 $config['sess_use_database']	= FALSE;
 $config['sess_table_name']		= 'ci_sessions';
 $config['sess_match_ip']		= FALSE;
@@ -279,7 +279,7 @@ $config['cookie_secure']	= FALSE;
 | COOKIE data is encountered
 |
 */
-$config['global_xss_filtering'] = FALSE;
+$config['global_xss_filtering'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------

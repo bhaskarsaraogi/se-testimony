@@ -61,7 +61,7 @@
       </div>
     </div>
     <div class="alert alert-info">
-      <p>To login as a guest, use <strong>guest/password</strong>.</p>
+      <p>Contact <strong>administrator</strong> for any difficulty.</p>
     </div>
     <?php
     echo form_close();

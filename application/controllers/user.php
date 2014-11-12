@@ -5,18 +5,13 @@ class user extends CI_Controller {
   function __construct()
   {
     parent::__construct();
-    if ($this->session->userdata('logged_in') == TRUE)
+    if ($this->session->userdata('logged_in') == FALSE)
     {
-      if ($this->session->userdata('user_name') == 'guest')
-        $this->session->set_userdata(array('login_flag' => 2));
-      else
-        $this->session->set_userdata(array('login_flag' => 1));
-    }
-    else
-    {
-      $this->session->set_userdata(array('login_flag' => 0));
+      redirect('main/login', 'location');
     }
     $this->load->model('settings_model', 'settings');
+    $this->load->model('user_model', 'user');
+    $this->load->model('testimonial_model', 'testimonial');
     $this->session->set_userdata(array('admin_controls' => FALSE, 'site_name' => $this->settings->get_site_name()));
   }
 
@@ -27,12 +22,8 @@ class user extends CI_Controller {
 
   public function dashboard()
   {
-    if ($this->session->userdata('login_flag') == 1 || $this->session->userdata('login_flag') == 2)
-    {
       $data['page_title'] = 'Dashboard';
       $user_name = $this->session->userdata('user_name');
-      $this->load->model('user_model', 'user');
-      $this->load->model('testimonial_model', 'testimonial');
       $user_id = $this->user->get_userdetails_id($user_name);
       $data['testimonials'] = $this->testimonial->show_all_testimonials($user_id, 0);
       $user_details = $this->user->get_userdetails($user_name);
@@ -42,17 +33,10 @@ class user extends CI_Controller {
       else
         $data['guest_account_flag'] = FALSE;
       $this->load->view('user/dashboard', $data);
-    }
-    else
-    {
-      redirect('main/login', 'location');
-    }
   }
 
   public function edit_profile()
   {
-    if ($this->session->userdata('login_flag') == 1)
-    {
       $data['page_title'] = 'Edit Your Profile';
       $data['error'] = NULL;
 
@@ -183,21 +167,10 @@ class user extends CI_Controller {
         $this->user->update_userdetails($user_name, $arr_userdetails);
         redirect('user', 'location');
       }
-    }
-    else if ($this->session->userdata('login_flag') == 2)
-    {
-      redirect('main/dashboard', 'location');
-    }
-    else
-    {
-      redirect('main/login', 'location');
-    }
   }
 
-  public function your_testimonials()
+  public function testimonials()
   {
-    if ($this->session->userdata('login_flag') == 1 || $this->session->userdata('login_flag') == 2)
-    {
       $data['page_title'] = 'Your Testimonials';
       $this->load->model('user_model', 'user');
       $this->load->model('testimonial_model', 'testimonial');
@@ -208,20 +181,9 @@ class user extends CI_Controller {
       $arr_testimonials['written_by_you'] = $this->testimonial->get_testimonials_by($user_id);
       $data['testimonials'] = $arr_testimonials;
       $this->load->view('user/your_testimonials', $data);
-    }
-    else if ($this->session->userdata('login_flag') == 2)
-    {
-      redirect('main/dashboard', 'location');
-    }
-    else
-    {
-      redirect('main/login', 'location');
-    }
   }
 
   public function search() {
-    if ($this->session->userdata('login_flag') == 1 || $this->session->userdata('login_flag') == 2)
-    {
       $data['page_title'] = 'Search';
       $this->load->model('user_model', 'user');
       $search_query = $this->input->post('query');
@@ -229,17 +191,10 @@ class user extends CI_Controller {
       $data['search_results'] = $search_results;
       $data['search_query'] = $search_query;
       $this->load->view('user/search', $data);
-    }
-    else
-    {
-      redirect('main/login', 'location');
-    }
   }
 
   public function profile($query)
   {
-    if ($this->session->userdata('login_flag') == 1 || $this->session->userdata('login_flag') == 2)
-    {
       $this->load->model('user_model', 'user');
       $this->load->model('testimonial_model', 'testimonial');
       $user_name = $this->session->userdata('user_name');
@@ -268,13 +223,8 @@ class user extends CI_Controller {
         $data['user_details'] = FALSE;
       }
       $this->load->view('user/profile', $data);
-    }
-    else
-    {
-      redirect('main/login', 'location');
-    }
   }
-
+/*
   public function verify($verification_key)
   {
     $this->load->model('user_model', 'user');
@@ -290,11 +240,10 @@ class user extends CI_Controller {
       $this->load->view('messages/account_verification_problem', $data);
     }
   }
+*/
 
   public function change_password()
   {
-    if ($this->session->userdata('login_flag') == 1)
-    {
       if ($this->form_validation->run('standard/change_password') == FALSE)
       {
         redirect('user/edit_profile', 'location');
@@ -306,45 +255,32 @@ class user extends CI_Controller {
         $this->simpleloginsecure->new_password($user_name, $password);
         redirect('user/edit_profile', 'location');
       }
-    }
-    else if ($this->session->userdata('login_flag') == 2)
-    {
-      redirect('main/dashboard', 'location');
-    }
-    else
-    {
-      redirect('main/login', 'location');
-    }
+  }
+
+  public function info()
+  {
+    $this->output->cache(3600);
+    $data['page_title'] = 'Information';
+    $this->load->view('standard/info', $data);
   }
 
   public function export()
   {
-    if ($this->session->userdata('login_flag'))
-    {
       $this->load->model('user_model', 'user');
       $user_name = $this->session->userdata('user_name');
       $user_id = $this->user->get_userdetails_id($user_name);
       $this->user->export_user_data($user_id);
-    }
-    else
-    {
-      redirect('404', 'location');
-    }
   }
 
   public function logout()
   {
-    if ($this->session->userdata('logged_in'))
-    {
       $this->simpleloginsecure->logout();
+      /*
       $data['page_title'] = 'Logged Out';
       $data['type'] = 'main';
       $this->load->view('messages/logged-out', $data);
-    }
-    else
-    {
+      */
       redirect('main/login', 'location');
-    }
   }
 
 }

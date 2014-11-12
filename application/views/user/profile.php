@@ -41,7 +41,7 @@
 
   <div id="testimonials" class="span8">
     <?php if (empty($testimonials)) { ?>
-    <p>No testimonials found. Be the first to write something.</p>
+    <p>No testimonials found.</p>
     <?php
   }
   else { ?>

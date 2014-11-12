@@ -5,15 +5,22 @@ class Main extends CI_Controller {
   function __construct()
   {
     parent::__construct();
+    //Loads all the required models
     $this->load->model('settings_model', 'settings');
+    $this->load->model('user_model', 'user');
+    $this->load->model('testimonial_model', 'testimonial');
+    //Set site data
     $this->session->set_userdata(array('admin_controls' => FALSE, 'site_name' => $this->settings->get_site_name()));
+    //If logged in redirects to user dashbard
+    if ($this->session->userdata('logged_in'))
+    {
+      redirect('user', 'location');
+    }
   }
 
   public function index()
   {
     $data['page_title'] = 'Home';
-    $this->load->model('testimonial_model', 'testimonial');
-    $this->load->model('user_model', 'user');
     $data['testimonial_count'] = $this->testimonial->count_published();
     $data['user_count'] = $this->user->count_users();
     $this->load->view('standard/main', $data);
@@ -21,17 +28,11 @@ class Main extends CI_Controller {
 
   public function login()
   {
-    if ($this->session->userdata('logged_in'))
-    {
-      redirect('user', 'location');
-    }
-    else
-    {
       $data['page_title'] = 'Login';
       $data['error'] = NULL;
 
       $this->form_validation->set_error_delimiters('<div class="alert alert-error"><p>', '</p></div>');
-
+      //Validation & not authentication
       if ($this->form_validation->run('standard/login') == FALSE)
       {
         $this->load->view('standard/login', $data);
@@ -55,18 +56,11 @@ class Main extends CI_Controller {
         {
           redirect('user', 'location');
         }
-      }
     }
   }
 
   public function register()
   {
-
-    if ($this->session->userdata('logged_in'))
-    {
-      redirect('user', 'location');
-    }
-    else {
       $data['page_title'] = 'Register';
       $this->form_validation->set_error_delimiters('<div class="alert alert-error">', '</div>');
       $data['error'] = NULL;
@@ -106,7 +100,6 @@ class Main extends CI_Controller {
             $this->load->view('messages/registration_problem', $data);
          }
         }
-      }
     }
   }
 
@@ -117,23 +110,12 @@ class Main extends CI_Controller {
     $this->load->view('standard/forgot_password', $data);
   }
 
-  public function info()
-  {
-    $this->output->cache(3600);
-    $data['page_title'] = 'Information';
-    $this->load->view('standard/info', $data);
-  }
+
 
   public function changelog()
   {
     $this->output->cache(3600);
     $data['page_title'] = 'Changelog';
     $this->load->view('standard/changelog', $data);
-  }
-
-  public function bitsmelange()
-  {
-    $data['page_title'] = '#bitsmelange';
-    $this->load->view('standard/bitsmelange', $data);
   }
 }
